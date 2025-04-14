@@ -26,3 +26,17 @@ module.exports = {
   db,
   connectDB,
 };
+
+// PORT=5000
+// NODE_ENV=development
+
+// JWT_SECRET=lksajflkdjflkjalkdsjflkajsdjfewjoalksdajfkiugreiugiakfjnvmcnviughksj
+// JWT_EXPIRE=30d
+
+// DB_HOST=localhost
+// DB_USER=root
+// DB_PASSWORD=797616
+// DB_NAME=chatapp
+// DB_PORT=3306
+
+// UPLOAD_PATH=./uploads
