@@ -40,7 +40,7 @@ const register = async (req, res) => {
 
     jwt.sign(
       jwtToken,
-      process.env.SECRET_KEY,
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE },
       (err, token) => {
         if (err) throw err;
@@ -91,7 +91,7 @@ const login = async (req, res) => {
 
     jwt.sign(
       jwtToken,
-      process.env.SECRET_KEY,
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE },
       (err, token) => {
         if (err) throw err;
