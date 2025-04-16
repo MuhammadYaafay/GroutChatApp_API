@@ -6,6 +6,7 @@ const path = require("path");
 const { connectDB } = require("./config/db");
 
 const authRoutes = require("./routes/auth.route");
+const userRoutes = require("./routes/user.route");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 const server = http.createServer(app);
 
