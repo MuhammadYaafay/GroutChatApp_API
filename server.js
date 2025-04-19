@@ -8,6 +8,7 @@ const { connectDB } = require("./config/db");
 const authRoutes = require("./routes/auth.route");
 const userRoutes = require("./routes/user.route");
 const messageRoutes = require("./routes/message.route");
+const channelRoutes = require('./routes/channel.route')
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/message", messageRoutes);
+app.use("/api/channel", channelRoutes)
 
 const server = http.createServer(app);
 

@@ -49,8 +49,8 @@ CREATE TABLE messages (
   id INT AUTO_INCREMENT PRIMARY KEY,
   content TEXT NOT NULL,
   sender_id INT NOT NULL,
-  recipient_id INT,  -- NULL for channel messages
-  channel_id INT,    -- NULL for direct messages
+  recipient_id INT,  
+  channel_id INT,    
   is_read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

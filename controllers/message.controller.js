@@ -1,65 +1,68 @@
-const { createPool } = require("mysql2");
 const { db } = require("../config/db");
 
 const sendDirectMessage = async (req, res) => {
-  const { recipentId, content } = req.body;
+  const { recipientId, content } = req.body;
   const senderId = req.user.id;
 
   try {
-    const [recipent] = await db.query(`SELECT id from users WHERE id = ?`, [
-      recipentId,
-    ]);
-
-    if (recipent.length === 0) {
-      return res.status(404).json({ message: "Recipient not found" });
-    }
-    //create message
-    const [message] = await db.query(
-      `INSERT INTO messages WHERE (content, sender_id, recipient_id) VALUES(?, ?, ?)`,
-      [content, senderId, recipentId]
+    // Check if recipient exists
+    const [recipient] = await db.query(
+      'SELECT id FROM users WHERE id = ?',
+      [recipientId]
     );
 
-    const messageId = message.insertId;
+    if (recipient.length === 0) {
+      return res.status(404).json({ msg: 'Recipient not found' });
+    }
 
-    //attachments if any
+    // Create message
+    const [result] = await db.query(
+      'INSERT INTO messages (content, sender_id, recipient_id) VALUES (?, ?, ?)',
+      [content, senderId, recipientId]
+    );
+
+    const messageId = result.insertId;
+
+    // Add attachments if any
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         await db.query(
-          `INSERT INTO message_attachments (messageId, file_name, file_path, file_type, file_size) VALUES (?, ?, ?, ?, ?)`,
+          'INSERT INTO message_attachments (message_id, file_name, file_path, file_type, file_size) VALUES (?, ?, ?, ?, ?)',
           [
             messageId,
             file.originalname,
             `/uploads/${file.filename}`,
             file.mimetype,
-            file.size,
+            file.size
           ]
         );
       }
     }
 
-    //get created message with sender details
-    const [messageWithSender] = await db.query(
-      `SELECT m.*, u.username, u.avatar FROM messages m
-        JOIN users u ON m.sender_id = u.id
-        WHERE m.id = ?`,
+    // Get the created message with sender details
+    const [message] = await db.query(
+      `SELECT m.*, u.username, u.avatar 
+       FROM messages m 
+       JOIN users u ON m.sender_id = u.id 
+       WHERE m.id = ?`,
       [messageId]
     );
 
-    //get attachments
+    // Get attachments
     const [attachments] = await db.query(
-      `SELECT * FROM message_attachments WHERE message_id = ?`,
+      'SELECT * FROM message_attachments WHERE message_id = ?',
       [messageId]
     );
 
     const messageData = {
-      ...messageWithSender[0],
-      attachments: attachments,
+      ...message[0],
+      attachments: attachments
     };
 
     res.json(messageData);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Error sending message" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
   }
 };
 
