@@ -24,7 +24,7 @@ const createChannel = async (req, res) => {
 
     //add creater as admin
     await db.query(
-      `INSERT INTO channel_memebers (channel_id, user_id, role) VALUES (?, ?, ?)`,
+      `INSERT INTO channel_members (channel_id, user_id, role) VALUES (?, ?, ?)`,
       [channelId, userId, "admin"]
     );
 
@@ -159,7 +159,7 @@ const getChannelById = async (req, res) => {
       ...channels[0],
       members,
     };
-    res.json(channel);
+    res.json({channel});
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Failed to get channel" });

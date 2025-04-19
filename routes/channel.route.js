@@ -5,7 +5,7 @@ const channelController = require("../controllers/channel.controller");
 const auth = require("../middlewares/auth.middleware");
 
 router.post(
-  "/",
+  "/create",
   [auth, check("name", "Name is required").notEmpty()],
   channelController.createChannel
 );
