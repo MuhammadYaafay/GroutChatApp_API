@@ -5,6 +5,8 @@ const userController = require("../controllers/user.controller");
 const auth = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
 
+router.get('/me', auth, userController.getCurrentUser);
+
 router.get("/", auth, userController.getUsers);
 
 router.get("/:id", auth, userController.getUserById);
@@ -14,6 +16,8 @@ router.put(
   [auth, upload.single("avatar")],
   userController.updateProfile
 );
+
+router.get('/online', auth, userController.getOnlineUsers);
 
 router.put(
   "/password",

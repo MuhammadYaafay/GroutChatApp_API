@@ -29,9 +29,14 @@ const createChannel = async (req, res) => {
     );
 
     //get the created channel
-    const [channels] = await db.query(`SELECT * FROM channels WHERE id = ?`, [
-      channelId,
-    ]);
+    const [channels] = await db.query(
+      `SELECT COUNT(*) as unread_count 
+       FROM messages 
+       WHERE channel_id = ? AND sender_id != ? AND created_at > (
+         SELECT IFNULL(last_active, '1970-01-01') FROM users WHERE id = ?
+       )`,
+      [channel.id, userId, userId]
+    );
 
     res.json(channels[0]);
   } catch (error) {

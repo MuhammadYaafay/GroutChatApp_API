@@ -17,7 +17,7 @@ module.exports = (io) => {
 
         // Update user status to online
         await db.query(
-          'UPDATE users SET status = ? WHERE id = ?',
+          'UPDATE users SET status = ?, last_active = CURRENT_TIMESTAMP WHERE id = ?',
           ['online', userId]
         );
 

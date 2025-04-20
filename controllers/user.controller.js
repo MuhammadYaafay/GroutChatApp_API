@@ -16,6 +16,24 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      'SELECT id, username, email, avatar, bio, status, last_active, created_at FROM users WHERE id = ?',
+      [req.user.id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 const getUserById = async (req, res) => {
   try {
     const [user] = await db.query(
@@ -131,9 +149,25 @@ const updatePassword = async (req, res) => {
   }
 };
 
+const getOnlineUsers = async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      'SELECT id, username, email, avatar, status, last_active FROM users WHERE status = ? AND id != ?',
+      ['online', req.user.id]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
+  getCurrentUser,
   updateProfile,
   updatePassword,
+  getOnlineUsers,
 };
